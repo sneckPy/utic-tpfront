@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from '../components/Modal';
 
 const apiEndPoint = 'http://localhost:8080/utic/brand'
 
 const Marca = () => {
 
     const [brands, setBrands] = useState([]);
-    const [visible, setVisible] = useState(false)
 
     const [data, setData] = useState({
         idBrand: "",
@@ -16,19 +14,28 @@ const Marca = () => {
         image: "",
     })
 
-    const [selectedBrand, setSelectedBrand] = useState({
-        idBrand: "",
-        name: "",
-        description: "",
-        image: "",
-    })
     const handleChange = (e) => {
+        console.log(e.target.value, e.target.id)
         const newData = { ...data }
         newData[e.target.id] = e.target.value
         setData(newData)
         console.log(newData)
     }
 
+    const handleChangeSelectedBrand = (e) => {
+        console.log(e.target.value, e.target.id)
+        const newData = { ...selectedBrand }
+        newData[e.target.id] = e.target.value
+        setSelectedBrand(newData)
+        console.log(newData)
+    }
+
+    const [selectedBrand, setSelectedBrand] = useState({
+        idBrand: "",
+        name: "",
+        description: "",
+        image: "",
+    })
     const handleSubmit = (e) => {
         e.preventDefault()
         axios.post(apiEndPoint, {
@@ -45,11 +52,12 @@ const Marca = () => {
     };
 
     const handleUpdate = (e) => {
+        console.log(e.target.value)
         e.preventDefault()
         axios.post(apiEndPoint, {
-            idBrand: data.idBrand,
-            name: data.name,
-            description: data.description,
+            idBrand: selectedBrand.idBrand,
+            name: selectedBrand.name,
+            description: selectedBrand.description,
         }).then(res => {
             console.log(res.data)
         }).then(getBrands).then(clearFields)
@@ -84,7 +92,7 @@ const Marca = () => {
 
                 </button>
                 <div className='mx-auto grid grid-cols-3 gap-8 z-10'>
-                    {brands.map((brand) =>
+                    {brands.map((brand, index) =>
 
                         <div key={brand.idBrand}>
                             <div className="card card-compact w-[450px] bg-base-100 hover:shadow-xl shadow-md">
@@ -95,15 +103,16 @@ const Marca = () => {
                                         <button onClick={() => {
                                             setSelectedBrand(brand)
                                         }}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.0} stroke="orange" className="w-8 h-8">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 
+                                            <label htmlFor="modal-update" className='cursor-pointer'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.0} stroke="orange" className="w-8 h-8">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 
                                                     4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25
                                                     2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                            </svg>
+                                                </svg>
+                                            </label>
                                         </button>
-                                        <p>{selectedBrand.idBrand}</p>
-
-                                        {/* <Modal visible={visible} setVisible={setVisible} brand={brand} /> */}
+                                        <input type="checkbox" id="modal-update" className="modal-toggle" />
+                                        <ModalUpdate data={selectedBrand} handleUpdate={handleUpdate} handleChange={handleChangeSelectedBrand} />
                                         <ButtonDelete handleDelete={handleDelete} brand={brand} />
                                     </div>
                                 </div>
@@ -128,7 +137,7 @@ function ModalAdd(props) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </label>
-                <form onSubmit={e => props.handleSubmit(e)}>
+                <form onSubmit={e => props.handleUpdate(e)}>
                     <label className="label">
                         <span className="label-text">Marca</span>
                     </label>
@@ -143,6 +152,43 @@ function ModalAdd(props) {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
+                        Enviar
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+function ModalUpdate(props) {
+
+    return (
+        <div className="modal">
+            <div className="modal-box relative">
+                <label htmlFor="modal-update" className="btn btn-circle btn-outline btn-sm absolute right-2 top-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </label>
+                <form onSubmit={e => props.handleUpdate(e)}>
+                    <label className="label">
+                        <span className="label-text">Marca</span>
+                    </label>
+                    <input onChange={e => props.handleChange(e)} id='name' value={props.data.name} type="text" placeholder='Nombre de la Marca'
+                        className='my-2 input input-bordered w-full max-w-xs' autoComplete='off' />
+                    <label className="label">
+                        <span className="label-text">Descripción</span>
+                    </label>
+                    <textarea onChange={e => props.handleChange(e)} id='description' value={props.data.description} type="text" placeholder='Datos de la marca'
+                        className='my-2 input input-bordered w-full max-w-xs min-h-[200px]' autoComplete='off' />
+                    <button className='btn  btn-outline btn-sm absolute right-2 bottom-2  '>
+                        <label htmlFor="modal-update" className='cursor-pointer'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        </label>
+                        <input type="checkbox" id="modal-update" className="modal-toggle" />
+
                         Enviar
                     </button>
                 </form>

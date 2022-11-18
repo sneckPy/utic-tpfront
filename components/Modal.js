@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-const Modal = ({ visible, setVisible, brand }) => {
+const Modal = ({ visible, setVisible, brand, handleChange }) => {
 
-    console.log(brand.idBrand)
     return (
         <>
             {visible &&
@@ -24,6 +23,7 @@ const Modal = ({ visible, setVisible, brand }) => {
                             </label>
                             <input
                                 value={brand.name}
+                                onChange={e => handleChange(e)}
                                 className='my-2 input input-bordered w-full max-w-xs' autoComplete='off' />
                             <button className='btn  btn-outline btn-sm absolute right-2 bottom-2  '>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
