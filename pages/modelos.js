@@ -48,7 +48,6 @@ const Modelos = () => {
         const newData = { ...data }
         newData[e.target.id] = e.target.value
         setData(newData)
-        console.log(newData)
     }
 
     const handleSubmit = (e) => {
@@ -95,6 +94,7 @@ const Modelos = () => {
             idModel: "",
             name: "",
             description: "",
+            idBrand: "",
             image: "",
         }
         setData(newData)
@@ -113,10 +113,11 @@ const Modelos = () => {
                             <div className="card card-compact w-[450px] bg-base-100 hover:shadow-xl shadow-md">
                                 <div className="card-body">
                                     <h2 className="card-title justify-center">{model.name}</h2>
-                                    <h2 className="card-title justify-start">{model.idBrand}</h2>
+                                    {/* <h2 className="card-title justify-start">{model.idBrand}</h2> */}
+                                    <BrandName brands={brands} model={model}></BrandName>
                                     <p>{model.description}</p>
                                     <div className="card-actions justify-end mt-2">
-                                    <ButtonDelete handleDelete={handleDelete} model={model} /> 
+                                        <ButtonDelete handleDelete={handleDelete} model={model} />
                                     </div>
                                 </div>
                             </div>
@@ -175,6 +176,21 @@ function ModalAdd(props) {
             </div >
         </div >
     );
+}
+
+const BrandName = (props) => {
+    return (
+        <>
+            {props.brands.map((brand) =>
+                brand.idBrand === props.model.idBrand
+                    ?
+                    <h2 key={brand.idBrand} className="card-title justify-start">{brand.name}</h2>
+                    : null
+
+            )}
+        </>
+    )
+
 }
 
 

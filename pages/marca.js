@@ -38,6 +38,8 @@ const Marca = () => {
     })
     const handleSubmit = (e) => {
         e.preventDefault()
+        console.log(data)
+
         axios.post(apiEndPoint, {
             name: data.name,
             description: data.description,
@@ -137,14 +139,14 @@ function ModalAdd(props) {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </label>
-                <form onSubmit={e => props.handleUpdate(e)}>
+                <form onSubmit={e => props.handleSubmit(e)}>
                     <label className="label">
                         <span className="label-text">Marca</span>
                     </label>
                     <input onChange={e => props.handleChange(e)} id='name' value={props.data.name} type="text" placeholder='Nombre de la Marca'
                         className='my-2 input input-bordered w-full max-w-xs' autoComplete='off' />
                     <label className="label">
-                        <span className="label-text">Descripcion</span>
+                        <span className="label-text">Descripción</span>
                     </label>
                     <textarea onChange={e => props.handleChange(e)} id='description' value={props.data.description} type="text" placeholder='Datos de la marca'
                         className='my-2 input input-bordered w-full max-w-xs min-h-[200px]' autoComplete='off' />
@@ -161,7 +163,6 @@ function ModalAdd(props) {
 }
 
 function ModalUpdate(props) {
-
     return (
         <div className="modal">
             <div className="modal-box relative">
