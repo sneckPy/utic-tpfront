@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable';
 
 const apiEndPoint = 'http://localhost:8080/utic/brand'
 
@@ -80,13 +82,26 @@ const Marca = () => {
         setBrands(res);
     };
 
+    const exportBrands = () => {
+        const doc = new jsPDF()
+        doc.autoTable();
+        const columns = ["ID", "Nombre", "Descripción"];
+        const rows = [];
+        brands.map(item => rows.push(Object.values(item)))
+        doc.autoTable(columns, rows);
+        doc.output('dataurlnewwindow', 'Reporte de Marcas');
+    }
+
     useEffect(() => {
         getBrands();
     }, []);
 
     return (
         <>
-            <label htmlFor="modal-add" className="btn btn-outline ml-12 mt-4">Agregar Marca</label>
+            <div className=' flex justify-between m-4'>
+                <label htmlFor="modal-add" className="btn btn-outline ml-12 mt-4">Agregar Marca</label>
+                <button className="btn btn-outline" onClick={exportBrands}>Generar Reporte</button>
+            </div>
             <input type="checkbox" id="modal-add" className="modal-toggle" />
             <ModalAdd data={data} handleChange={handleChange} handleSubmit={handleSubmit} />
             <div className="flex h-screen">
@@ -183,14 +198,9 @@ function ModalUpdate(props) {
                     <textarea onChange={e => props.handleChange(e)} id='description' value={props.data.description} type="text" placeholder='Datos de la marca'
                         className='my-2 input input-bordered w-full max-w-xs min-h-[200px]' autoComplete='off' />
                     <button className='btn  btn-outline btn-sm absolute right-2 bottom-2  '>
-                        <label htmlFor="modal-update" className='cursor-pointer'>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                            </svg>
+                        <label htmlFor="modal-update">
+                            Guardar
                         </label>
-                        <input type="checkbox" id="modal-update" className="modal-toggle" />
-
-                        Enviar
                     </button>
                 </form>
             </div>
