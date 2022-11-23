@@ -17,19 +17,15 @@ const Marca = () => {
     })
 
     const handleChange = (e) => {
-        console.log(e.target.value, e.target.id)
         const newData = { ...data }
         newData[e.target.id] = e.target.value
         setData(newData)
-        console.log(newData)
     }
 
     const handleChangeSelectedBrand = (e) => {
-        console.log(e.target.value, e.target.id)
         const newData = { ...selectedBrand }
         newData[e.target.id] = e.target.value
         setSelectedBrand(newData)
-        console.log(newData)
     }
 
     const [selectedBrand, setSelectedBrand] = useState({
@@ -94,7 +90,6 @@ const Marca = () => {
 
     const exportBrand = (brand) => {
         const doc = new jsPDF()
-        console.log(brand.idBrand, brand.name, brand.description)
         autoTable(doc, {
             head: [["ID Marca", "Nombre", "Descripción"]],
             body: [[brand.idBrand, brand.name, brand.description]],
@@ -109,7 +104,7 @@ const Marca = () => {
     return (
         <>
             <div className=' flex justify-between m-4'>
-                <label htmlFor="modal-add" className="btn btn-outline ml-12 mt-4">Agregar Marca</label>
+                <label htmlFor="modal-add" className="btn btn-outline">Agregar Marca</label>
                 <button className="btn btn-outline" onClick={exportAllBrands}>Generar Reporte</button>
             </div>
             <input type="checkbox" id="modal-add" className="modal-toggle" />
@@ -123,6 +118,7 @@ const Marca = () => {
 
                         <div key={brand.idBrand}>
                             <div className="card card-compact w-[450px] bg-base-100 hover:shadow-xl shadow-md">
+                                <figure><img src={brand.image} alt="Brand Image" className='max-h-[350px] object-cover' /></figure>
                                 <div className="card-body">
                                     <h2 className="card-title justify-center">{brand.name}</h2>
                                     <p>{brand.description}</p>

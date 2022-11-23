@@ -97,7 +97,7 @@ const Modelos = () => {
     }
 
     const exportAllModels = () => {
-        const doc = new jsPDF()
+        const doc = new jsPDF("p", "pt", "a4")
         const rows = models.map((model) => Object.values(model))
         autoTable(doc, {
             head: [["ID Modelo", "Nombre", "ID Marca", "Descripción"]],
@@ -129,6 +129,7 @@ const Modelos = () => {
 
                         <div key={model.idModel}>
                             <div className="card card-compact w-[450px] bg-base-100 hover:shadow-xl shadow-md">
+                                <figure><img src={model.image} alt="Model Image" className='max-h-[350px] object-cover' /></figure>
                                 <div className="card-body">
                                     <h2 className="card-title justify-center">{model.name}</h2>
                                     <BrandName brands={brands} model={model}></BrandName>
