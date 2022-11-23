@@ -97,22 +97,36 @@ const Modelos = () => {
     }
 
     const exportAllModels = () => {
-        const doc = new jsPDF("p", "pt", "a4")
-        const rows = models.map((model) => Object.values(model))
+        let rows = models.map((model) => Object.values(model))
+        rows.map((row) =>
+            brands.map((brand) =>
+                row[2] === brand.idBrand
+                    ? row[2] = brand.name
+                    : null
+            )
+        )
+        const doc = new jsPDF()
         autoTable(doc, {
-            head: [["ID Modelo", "Nombre", "ID Marca", "Descripción"]],
+            head: [["ID Modelo", "Nombre", "Marca", "Descripción"]],
             body: rows,
         })
         doc.output('dataurlnewwindow', 'Reporte de Modelos');
     }
 
     const exportModel = (model) => {
+        let brandName = ''
+        brands.map((brand) =>
+            brand.idBrand === model.idBrand
+                ?
+                brandName = brand.name
+                : null
+        )
         const doc = new jsPDF()
         autoTable(doc, {
-            head: [["ID Modelo", "Nombre", "ID Marca", "Descripción"]],
-            body: [[model.idModel, model.name, model.idBrand, model.description]],
+            head: [["ID Modelo", "Nombre", "Marca", "Descripción"]],
+            body: [[model.idModel, model.name, brandName, model.description]],
         })
-        doc.output('dataurlnewwindow', 'Reporte de Marcas');
+        doc.output('dataurlnewwindow', 'Reporte de Modelos');
     }
 
     return (
@@ -132,7 +146,7 @@ const Modelos = () => {
                                 <figure><img src={model.image} alt="Model Image" className='max-h-[350px] object-cover' /></figure>
                                 <div className="card-body">
                                     <h2 className="card-title justify-center">{model.name}</h2>
-                                    <BrandName brands={brands} model={model}></BrandName>
+                                    <BrandName brands={brands} model={model} />
                                     <p>{model.description}</p>
                                     <div className="card-actions justify-end mt-2">
                                         <ButtonReport exportModel={exportModel} model={model} />
